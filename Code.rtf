@@ -1,0 +1,132 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2706
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red15\green112\blue1;\red255\green255\blue254;\red157\green0\blue210;
+\red0\green0\blue0;\red144\green1\blue18;\red18\green112\blue68;\red0\green0\blue255;\red101\green76\blue29;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c50196\c0;\cssrgb\c100000\c100000\c99608;\cssrgb\c68627\c0\c85882;
+\cssrgb\c0\c0\c0;\cssrgb\c63922\c8235\c8235;\cssrgb\c3529\c50588\c33725;\cssrgb\c0\c0\c100000;\cssrgb\c47451\c36863\c14902;
+}
+\margl1440\margr1440\vieww22240\viewh17200\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs28 \cf2 \cb3 \expnd0\expndtw0\kerning0
+# import dependencies \cf2 \cb3 \
+\pard\pardeftab720\partightenfactor0
+\cf4 from\cf0  google.colab \cf4 import\cf0  drive\cb1 \
+\cb3 drive.mount(\cf6 '/content/gdrive'\cf0 )\cb1 \
+\cf4 \cb3 import\cf0  numpy \cf4 as\cf0  np\cb1 \
+\cf4 \cb3 import\cf0  pandas \cf4 as\cf0  pd\cb1 \
+\cf4 \cb3 from\cf0  sklearn.naive_bayes \cf4 import\cf0  GaussianNB\cb1 \
+\cf4 \cb3 from\cf0  sklearn.tree \cf4 import\cf0  DecisionTreeClassifier\cb1 \
+\cf4 \cb3 from\cf0  sklearn.ensemble \cf4 import\cf0  RandomForestClassifier\cb1 \
+\cf4 \cb3 from\cf0  sklearn.discriminant_analysis \cf4 import\cf0  LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis\cb1 \
+\cf4 \cb3 from\cf0  sklearn.neural_network \cf4 import\cf0  MLPClassifier\cb1 \
+\cf4 \cb3 from\cf0  sklearn.model_selection \cf4 import\cf0  cross_val_score\cb1 \
+\cf4 \cb3 import\cf0  matplotlib.pyplot \cf4 as\cf0  plt\cb1 \
+\cf4 \cb3 from\cf0  sklearn.metrics \cf4 import\cf0  confusion_matrix, accuracy_score, f1_score, roc_curve\cb1 \
+\cb3 data = pd.read_csv(\cf6 "/content/gdrive/My Drive/findata.csv"\cf0 , sep = \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf6 \cb3 ','\cf0 )\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb3 X = data.iloc[:, \cf7 1\cf0 :\cf7 -1\cf0 ]\cb1 \
+\cb3 y = data.iloc[:, \cf7 -1\cf0 ]\cb1 \
+\cb3 classifiers = [\cb1 \
+\cb3     (\cf6 'NB'\cf0 , GaussianNB()),\cb1 \
+\cb3     (\cf6 'DT'\cf0 , DecisionTreeClassifier()),\cb1 \
+\cb3     (\cf6 'RF'\cf0 , RandomForestClassifier(n_estimators=\cf7 100\cf0 )),\cb1 \
+\cb3     (\cf6 'LDA'\cf0 , LinearDiscriminantAnalysis()),\cb1 \
+\cb3     (\cf6 'QDA'\cf0 , QuadraticDiscriminantAnalysis()),\cb1 \
+\cb3     (\cf6 'MLP'\cf0 , MLPClassifier(max_iter=\cf7 1000\cf0 ))\cb1 \
+\cb3 ]\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 # set up feature sets\cf0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb3 feature_sets = []\cb1 \
+\cf4 \cb3 for\cf0  i \cf8 in\cf0  \cf9 range\cf0 (\cf7 1\cf0 , \cf7 15\cf0 ):\cb1 \
+\cb3     feature_sets.append(X.iloc[:, :i])\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 # set up results table\cf0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb3 results = pd.DataFrame(columns=[\cf6 'classifier'\cf0 , \cf6 'features'\cf0 , \cf6 'accuracy'\cf0 ])\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 # loop through feature sets and classifiers\cf0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3 for\cf0  features \cf8 in\cf0  feature_sets:\cb1 \
+\cb3     \cf4 for\cf0  clf_name, clf \cf8 in\cf0  classifiers:\cb1 \
+\cb3         scores = cross_val_score(clf, features, y, cv=\cf7 10\cf0 )\cb1 \
+\cb3         results = results.append(\{\cb1 \
+\cb3             \cf6 'classifier'\cf0 : clf_name,\cb1 \
+\cb3             \cf6 'features'\cf0 : features.shape[\cf7 1\cf0 ],\cb1 \
+\cb3             \cf6 'accuracy'\cf0 : scores.mean()\cb1 \
+\cb3         \}, ignore_index=\cf8 True\cf0 )\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 # plot accuracy vs number of features\cf0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb3 fig, ax = plt.subplots()\cb1 \
+\cf4 \cb3 for\cf0  clf_name \cf8 in\cf0  classifiers:\cb1 \
+\cb3     clf_results = results[results[\cf6 'classifier'\cf0 ] == clf_name[\cf7 0\cf0 ]]\cb1 \
+\cb3     ax.plot(clf_results[\cf6 'features'\cf0 ], clf_results[\cf6 'accuracy'\cf0 ], label=clf_name[\cf7 0\cf0 ])\cb1 \
+\cb3 ax.legend()\cb1 \
+\cb3 ax.set_xlabel(\cf6 'Number of Features'\cf0 )\cb1 \
+\cb3 ax.set_ylabel(\cf6 'Accuracy'\cf0 )\cb1 \
+\cb3 ax.set_title(\cf6 'Classifier Performance vs Number of Features'\cf0 )\cb1 \
+\cb3 plt.show()\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 # find best number of features for each classifier\cf0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb3 best_features = results.groupby([\cf6 'classifier'\cf0 ])[\cf6 'features'\cf0 , \cf6 'accuracy'\cf0 ].apply(\cb1 \
+\cb3     \cf8 lambda\cf0  x: x.loc[x[\cf6 'accuracy'\cf0 ].idxmax()]\cb1 \
+\cb3 ).reset_index(drop=\cf8 True\cf0 )\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 # print results table\cf0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf9 \cb3 print\cf0 (best_features)\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 # print confusion matrix and performance metrics \cf0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3 from\cf0  sklearn.model_selection \cf4 import\cf0  cross_val_predict\cb1 \
+\cf4 \cb3 import\cf0  matplotlib.pyplot \cf4 as\cf0  plt\cb1 \
+\cf4 \cb3 import\cf0  seaborn \cf4 as\cf0  sns\cb1 \
+\
+\cf4 \cb3 for\cf0  i \cf8 in\cf0  \cf9 range\cf0 (\cf7 1\cf0 , \cf7 15\cf0 ):\cb1 \
+\cb3     features = X.iloc[:, :i]\cb1 \
+\cb3     \cf4 for\cf0  clf_name, clf \cf8 in\cf0  classifiers:\cb1 \
+\cb3         y_pred = cross_val_predict(clf, features, y, cv=\cf7 10\cf0 )\cb1 \
+\cb3         cm = confusion_matrix(y, y_pred)\cb1 \
+\cb3         \cf4 if\cf0  cm.shape != (\cf7 3\cf0 , \cf7 3\cf0 ):\cb1 \
+\cb3             \cf9 print\cf0 (\cf6 'Skipping evaluation for \{\} features with classifier \{\} because of invalid confusion matrix shape: \{\}'\cf0 .\cf9 format\cf0 (i, clf_name, cm.shape))\cb1 \
+\cb3             \cf4 continue\cf0 \cb1 \
+\cb3         tn, fp, fn, tp, fn1, fn2, fp1, fp2, fp3 = cm.ravel()\cb1 \
+\cb3         acc = accuracy_score(y, y_pred)\cb1 \
+\cb3         sen = tp / (tp + fn1 + fn2)\cb1 \
+\cb3         spe = (tn + fn1 + fn2) / (tn + fp1 + fp2 + fp3 + fn1 + fn2)\cb1 \
+\cb3         f1 = f1_score(y, y_pred, average=\cf6 'macro'\cf0 )\cb1 \
+\cb3         fpr, tpr, _ = roc_curve(y, y_pred, pos_label=\cf7 2\cf0 )\cb1 \
+\cb3         \cf9 print\cf0 (\cf6 'Number of Features: \{\}'\cf0 .\cf9 format\cf0 (i))\cb1 \
+\cb3         \cf9 print\cf0 (\cf6 'Classifier: \{\}'\cf0 .\cf9 format\cf0 (clf_name))\cb1 \
+\cb3         \cf9 print\cf0 (\cf6 'Confusion Matrix:\\n\{\}'\cf0 .\cf9 format\cf0 (cm))\cb1 \
+\cb3         \cf9 print\cf0 (\cf6 'Accuracy: \{:.3f\}'\cf0 .\cf9 format\cf0 (acc))\cb1 \
+\cb3         \cf9 print\cf0 (\cf6 'Sensitivity: \{:.3f\}'\cf0 .\cf9 format\cf0 (sen))\cb1 \
+\cb3         \cf9 print\cf0 (\cf6 'Specificity: \{:.3f\}'\cf0 .\cf9 format\cf0 (spe))\cb1 \
+\cb3         \cf9 print\cf0 (\cf6 'F1-Score: \{:.3f\}'\cf0 .\cf9 format\cf0 (f1))\cb1 \
+\cb3         \cf9 print\cf0 (\cf6 'False Positive Rate: \{:.3f\}'\cf0 .\cf9 format\cf0 (fp/(fp+tn)))\cb1 \
+\cb3         \cf9 print\cf0 (\cf6 'False Negative Rate: \{:.3f\}'\cf0 .\cf9 format\cf0 (fn/(tp+fn1+fn2)))\cb1 \
+\cb3         \cf9 print\cf0 ()\cb1 \
+\cb3         \cb1 \
+\cb3         \cf2 # plot the confusion matrix\cf0 \cb1 \
+\cb3         plt.figure(figsize=(\cf7 5\cf0 ,\cf7 5\cf0 ))\cb1 \
+\cb3         sns.heatmap(cm, annot=\cf8 True\cf0 , cmap=\cf6 'Blues'\cf0 , fmt=\cf6 'g'\cf0 )\cb1 \
+\cb3         plt.title(\cf6 'Confusion Matrix for \{\} Features with \{\} Classifier'\cf0 .\cf9 format\cf0 (i, clf_name))\cb1 \
+\cb3         plt.xlabel(\cf6 'Predicted Labels'\cf0 )\cb1 \
+\cb3         plt.ylabel(\cf6 'True Labels'\cf0 )\cb1 \
+\cb3         plt.show()\cb1 \
+}
