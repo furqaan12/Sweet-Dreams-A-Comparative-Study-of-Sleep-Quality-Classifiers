@@ -2,6 +2,12 @@
 
 The "Sweet Dreams: A Comparative Study of Sleep Quality Classifiers" Github repository contains code and data related to a project focused on evaluating the performance of six different classifiers for sleep stage scoring.
 
+
+
+![maxresdefault](https://user-images.githubusercontent.com/52755021/225415389-bb601eaa-7192-4af4-a4e6-7fb8c2a4c0f9.jpg)
+
+
+
 Sleep quality is a crucial factor in maintaining good health and well-being. Polysomnographic (PSG) recordings are widely used to measure sleep quality by capturing different types of physiological data including electroencephalogram (EEG), electrooculogram (EOG), electromyogram (EMG), and electrocardiogram (ECG). The PSG recording divides into non-overlapping time windows (segments) based on the American academy of sleep medicine (AASM) manual recommendation and each segment is classified into one of the five sleep stages.
 
 The project used sleep data from the SC Sleep-EDF Database [Expanded], which is available through Physionet for training and evaluation purposes. The dataset consists of 15 features extracted from the brain signals of 8 subjects, along with sleep category labels for wakefulness, light sleep + REM, and deep sleep.
@@ -12,7 +18,7 @@ The performance of each classifier was evaluated by comparing the accuracy versu
 
 The results were presented in a PowerPoint presentation, which includes tables and figures for a better understanding of the study. The repository contains code for data preprocessing, feature selection, and classifier implementation in Python. It also includes the sleep dataset used in the project.
 
-![maxresdefault](https://user-images.githubusercontent.com/52755021/225415389-bb601eaa-7192-4af4-a4e6-7fb8c2a4c0f9.jpg)
+
 
 
 
