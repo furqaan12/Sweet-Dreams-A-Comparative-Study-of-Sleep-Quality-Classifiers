@@ -12,6 +12,7 @@ The performance of each classifier was evaluated by comparing the accuracy versu
 
 The results were presented in a PowerPoint presentation, which includes tables and figures for a better understanding of the study. The repository contains code for data preprocessing, feature selection, and classifier implementation in Python. It also includes the sleep dataset used in the project.
 
+![maxresdefault](https://user-images.githubusercontent.com/52755021/225415389-bb601eaa-7192-4af4-a4e6-7fb8c2a4c0f9.jpg)
 
 
 
